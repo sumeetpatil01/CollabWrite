@@ -11,7 +11,7 @@ Welcome to **CollabWrite**, a real-time collaborative text editor that enables s
 1. Clone the repository:
    ```bash
    git clone https://github.com/sumeetpatil01/CollabWrite
-Contributing                                                                                                                                                                                                           
+                                                                                                                                                                                                
 Contributions are welcome! Please open an issue or submit a pull request.
 
 ## Typing as User1
