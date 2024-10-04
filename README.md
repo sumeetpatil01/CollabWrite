@@ -10,7 +10,7 @@ Welcome to **CollabWrite**, a real-time collaborative text editor that enables s
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/sumeetpatil01/CollabWrite
 cd collabwrite
 go run main.go
 Usage
