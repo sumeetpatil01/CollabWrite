@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"os"
 	"sync"
 
 	"github.com/gin-gonic/gin"
@@ -171,6 +172,12 @@ func main() {
 	// Start handling messages in a separate goroutine
 	go handleMessages()
 
-	// Run the server on port 8080
-	r.Run(":8080")
+	// Get the port from the environment variable (PORT) if available, default to 8080
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default to port 8080 if no PORT variable is set
+	}
+
+	// Run the server on the specified port
+	r.Run(":" + port)
 }
