@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaborative Editor</title>
+</head>
+<body>
+    <h1>Collaborative Editor</h1>
+
+    <textarea id="editor" cols="50" rows="10" oninput="sendContent()"></textarea>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:8080/ws");
+
+        socket.onopen = () => {
+            console.log('WebSocket connection established');
+        };
+
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            document.getElementById("editor").value = message.content;
+        };
+
+        function sendContent() {
+            const content = document.getElementById("editor").value;
+            socket.send(JSON.stringify({ content: content }));
+        }
+    </script>
+</body>
+</html>
