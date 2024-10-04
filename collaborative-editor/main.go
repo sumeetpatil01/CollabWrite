@@ -22,7 +22,8 @@ var broadcast = make(chan Message)
 var mutex = &sync.Mutex{}
 
 type Message struct {
-	Content string `json:"content"`
+	Content  string `json:"content"`
+	Username string `json:"username"` // Add username field
 }
 
 // Initialize database connection
@@ -87,7 +88,7 @@ func handleWebSocket(c *gin.Context) {
 
 	// Load existing document content from DB and send it to the new client
 	initialContent := loadContent()
-	err = conn.WriteJSON(Message{Content: initialContent})
+	err = conn.WriteJSON(Message{Content: initialContent, Username: "Server"})
 	if err != nil {
 		log.Println("Failed to send initial content to client:", err)
 		return
@@ -110,11 +111,15 @@ func handleWebSocket(c *gin.Context) {
 			break
 		}
 
-		// Save the document content to the database
-		saveContent(msg.Content)
-
-		// Send the received message to the broadcast channel
-		broadcast <- msg
+		// Save the document content to the database only if not a typing notification
+		if msg.Content != "typing" {
+			saveContent(msg.Content)
+			// Send the updated content to all clients
+			broadcast <- msg
+		} else {
+			// Send typing notification to all clients
+			broadcast <- Message{Content: "typing", Username: msg.Username}
+		}
 	}
 }
 
@@ -123,16 +128,31 @@ func handleMessages() {
 		// Get the next message from the broadcast channel
 		msg := <-broadcast
 
-		// Send the message to all connected clients
-		mutex.Lock()
-		for conn := range clients {
-			err := conn.WriteJSON(msg)
-			if err != nil {
-				conn.Close()
-				delete(clients, conn)
+		// If the content is "typing", send it as a typing notification
+		if msg.Content == "typing" {
+			// Broadcast typing notification
+			for conn := range clients {
+				err := conn.WriteJSON(Message{
+					Content:  "typing",
+					Username: msg.Username,
+				})
+				if err != nil {
+					conn.Close()
+					delete(clients, conn)
+				}
 			}
+		} else {
+			// Send the actual content to all connected clients
+			mutex.Lock()
+			for conn := range clients {
+				err := conn.WriteJSON(msg)
+				if err != nil {
+					conn.Close()
+					delete(clients, conn)
+				}
+			}
+			mutex.Unlock()
 		}
-		mutex.Unlock()
 	}
 }
 
