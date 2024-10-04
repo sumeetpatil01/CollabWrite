@@ -158,6 +158,7 @@ func handleMessages() {
 }
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	// Initialize the database
@@ -172,12 +173,10 @@ func main() {
 	// Start handling messages in a separate goroutine
 	go handleMessages()
 
-	// Get the PORT from the environment variable, default to 8080 if not set
+	// Bind to the port specified by the environment variable PORT
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080" // Fallback port for local testing
+		port = "8080" // default port
 	}
-
-	// Run the server on the specified port
 	r.Run(":" + port)
 }
