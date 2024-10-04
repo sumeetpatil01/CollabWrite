@@ -172,10 +172,10 @@ func main() {
 	// Start handling messages in a separate goroutine
 	go handleMessages()
 
-	// Get the port from the environment variable (PORT) if available, default to 8080
+	// Get the PORT from the environment variable, default to 8080 if not set
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080" // Default to port 8080 if no PORT variable is set
+		port = "8080" // Fallback port for local testing
 	}
 
 	// Run the server on the specified port
