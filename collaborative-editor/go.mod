@@ -44,4 +44,7 @@ require (
 	modernc.org/sqlite v1.33.1 // indirect
 	modernc.org/strutil v1.2.0 // indirect
 	modernc.org/token v1.1.0 // indirect
+	go get github.com/gin-gonic/gin
+go get github.com/gorilla/websocket
+
 )
