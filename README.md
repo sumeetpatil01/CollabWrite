@@ -11,12 +11,6 @@ Welcome to **CollabWrite**, a real-time collaborative text editor that enables s
 1. Clone the repository:
    ```bash
    git clone https://github.com/sumeetpatil01/CollabWrite
-cd collabwrite
-go run main.go
-Usage
-Open index.html in your browser.
-Enter your name when prompted.
-Start collaborating in real-time with your friends!
 Contributing
 Contributions are welcome! Please open an issue or submit a pull request.
 
